@@ -20,7 +20,7 @@ $Radio_hide = GUICtrlCreateRadio('Hide', 22, 161, 49, 17)
 GUICtrlSetTip(-1, 'Hide from context menu' & @CRLF & '(shift + right click to display)')
 GUICtrlCreateGroup('', -99, -99, 1, 1)
 
-$lang = RegRead('HKCU\Control Panel\Desktop', 'PreferredUILanguagesaaa')
+$lang = RegRead('HKCU\Control Panel\Desktop', 'PreferredUILanguages')
 If Not $lang And @OSLang = '040d' Then $lang = 'he-IL'
 
 If $lang = 'he-IL' Then
@@ -77,7 +77,6 @@ Func add()
 
         If GUICtrlRead($Radio_hide) = 1 Then RegWrite($reg[$i], 'Extended', 'REG_SZ', '')
         If GUICtrlRead($Radio_show) = 1 Then RegDelete($reg[$i], 'Extended')
-
     Next
 
     If FileExists($vbs) Then FileDelete($vbs)
