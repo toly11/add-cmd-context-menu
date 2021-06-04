@@ -24,9 +24,9 @@ $lang = RegRead('HKCU\Control Panel\Desktop', 'PreferredUILanguagesaaa')
 If Not $lang And @OSLang = '040d' Then $lang = 'he-IL'
 
 If $lang = 'he-IL' Then
-	GUICtrlSetState($Radio_hebrew, $GUI_CHECKED)
+    GUICtrlSetState($Radio_hebrew, $GUI_CHECKED)
 Else
-	GUICtrlSetState($Radio_english, $GUI_CHECKED)
+    GUICtrlSetState($Radio_english, $GUI_CHECKED)
 EndIf
 
 GUISetState(@SW_SHOW)
@@ -40,56 +40,56 @@ $vbs = @AppDataDir & '\RunCmdAsAdmin.vbs'
 $hideItems = False
 
 While True
-	Switch GUIGetMsg()
-		Case $GUI_EVENT_CLOSE
-			Exit
-		Case $button_add
-			add()
-		Case $button_remove
-			remove()
-	EndSwitch
+    Switch GUIGetMsg()
+        Case $GUI_EVENT_CLOSE
+            Exit
+        Case $button_add
+            add()
+        Case $button_remove
+            remove()
+    EndSwitch
 WEnd
 
 Func add()
-	If GUICtrlRead($Radio_hebrew) = 1 Then
-		$strCmd = 'פתח כאן שורת פקודה'
-		$strCmdAdmin = '‏‏‏‏פתח כאן שורת פקודה כמנהל'
-	Else
-		$strCmd = 'open cmd here'
-		$strCmdAdmin = '‏‏open cmd here as administrator'
-	EndIf
+    If GUICtrlRead($Radio_hebrew) = 1 Then
+        $strCmd = 'פתח כאן שורת פקודה'
+        $strCmdAdmin = '‏‏‏‏פתח כאן שורת פקודה כמנהל'
+    Else
+        $strCmd = 'open cmd here'
+        $strCmdAdmin = '‏‏open cmd here as administrator'
+    EndIf
 
-	For $i = 0 To 2
-		RegWrite($reg[$i], 'SubCommands', 'REG_SZ', '')
-		RegWrite($reg[$i], 'MUIVerb', 'REG_SZ', $strCmd)
-		RegWrite($reg[$i], 'icon', 'REG_SZ', 'cmd.exe')
-		RegWrite($reg[$i] & '\shell\cmd', '', 'REG_SZ', $strCmd)
-		RegWrite($reg[$i] & '\shell\cmd', 'NoWorkingDirectory', 'REG_SZ', '')
-		RegWrite($reg[$i] & '\shell\cmd', 'NeverDefault', 'REG_SZ', '')
-		RegWrite($reg[$i] & '\shell\cmd', 'Icon', 'REG_SZ', 'cmd.exe')
-		RegWrite($reg[$i] & '\shell\cmd\command', '', 'REG_SZ', 'cmd.exe /s /k pushd "%V"')
-		RegWrite($reg[$i] & '\shell\cmdAdministrator', '', 'REG_SZ', $strCmdAdmin)
-		RegWrite($reg[$i] & '\shell\cmdAdministrator', 'NoWorkingDirectory', 'REG_SZ', '')
-		RegWrite($reg[$i] & '\shell\cmdAdministrator', 'NeverDefault', 'REG_SZ', '')
-		RegWrite($reg[$i] & '\shell\cmdAdministrator', 'Icon', 'REG_SZ', 'cmd.exe')
-		RegWrite($reg[$i] & '\shell\cmdAdministrator', 'CommandFlags', 'REG_DWORD', '23')
-		RegWrite($reg[$i] & '\shell\cmdAdministrator\command', '', 'REG_SZ', StringFormat('wscript "%s" "%V"', $vbs))
+    For $i = 0 To 2
+        RegWrite($reg[$i], 'SubCommands', 'REG_SZ', '')
+        RegWrite($reg[$i], 'MUIVerb', 'REG_SZ', $strCmd)
+        RegWrite($reg[$i], 'icon', 'REG_SZ', 'cmd.exe')
+        RegWrite($reg[$i] & '\shell\cmd', '', 'REG_SZ', $strCmd)
+        RegWrite($reg[$i] & '\shell\cmd', 'NoWorkingDirectory', 'REG_SZ', '')
+        RegWrite($reg[$i] & '\shell\cmd', 'NeverDefault', 'REG_SZ', '')
+        RegWrite($reg[$i] & '\shell\cmd', 'Icon', 'REG_SZ', 'cmd.exe')
+        RegWrite($reg[$i] & '\shell\cmd\command', '', 'REG_SZ', 'cmd.exe /s /k pushd "%V"')
+        RegWrite($reg[$i] & '\shell\cmdAdministrator', '', 'REG_SZ', $strCmdAdmin)
+        RegWrite($reg[$i] & '\shell\cmdAdministrator', 'NoWorkingDirectory', 'REG_SZ', '')
+        RegWrite($reg[$i] & '\shell\cmdAdministrator', 'NeverDefault', 'REG_SZ', '')
+        RegWrite($reg[$i] & '\shell\cmdAdministrator', 'Icon', 'REG_SZ', 'cmd.exe')
+        RegWrite($reg[$i] & '\shell\cmdAdministrator', 'CommandFlags', 'REG_DWORD', '23')
+        RegWrite($reg[$i] & '\shell\cmdAdministrator\command', '', 'REG_SZ', StringFormat('wscript "%s" "%V"', $vbs))
 
-		If GUICtrlRead($Radio_hide) = 1 Then RegWrite($reg[$i], 'Extended', 'REG_SZ', '')
-		If GUICtrlRead($Radio_show) = 1 Then RegDelete($reg[$i], 'Extended')
+        If GUICtrlRead($Radio_hide) = 1 Then RegWrite($reg[$i], 'Extended', 'REG_SZ', '')
+        If GUICtrlRead($Radio_show) = 1 Then RegDelete($reg[$i], 'Extended')
 
-	Next
+    Next
 
-	If FileExists($vbs) Then FileDelete($vbs)
-	FileWrite($vbs, 'Dim Arg, var1' & @CRLF & _
-			'Set Arg = WScript.Arguments' & @CRLF & _
-			'Set Shell = CreateObject("Shell.Application")' & @CRLF & _
-			'Shell.ShellExecute "cmd", "/k pushd " & Arg(0), , "runas", 1')
+    If FileExists($vbs) Then FileDelete($vbs)
+    FileWrite($vbs, 'Dim Arg, var1' & @CRLF & _
+        'Set Arg = WScript.Arguments' & @CRLF & _
+        'Set Shell = CreateObject("Shell.Application")' & @CRLF & _
+        'Shell.ShellExecute "cmd", "/k pushd " & Arg(0), , "runas", 1')
 EndFunc   ;==>add
 
 Func remove()
-	For $i = 0 To 2
-		RegDelete($reg[$i])
-	Next
-	FileDelete($vbs)
+    For $i = 0 To 2
+        RegDelete($reg[$i])
+    Next
+    FileDelete($vbs)
 EndFunc   ;==>remove
